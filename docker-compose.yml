@@ -1,6 +1,4 @@
 version: '3.3'
-volumes:
-
 services:
   cba-proxy:
     image: ghcr.io/calico-crusade/cardboardbox-proxy/api:latest
