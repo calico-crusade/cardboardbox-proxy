@@ -1,0 +1,13 @@
+version: '3.3'
+volumes:
+
+services:
+  cba-proxy:
+    image: ghcr.io/calico-crusade/cardboardbox-proxy/api:latest
+    restart: always
+    environment:
+      - Postgres:ConnectionString=User ID=${POSTGRES_USER};Password=${POSTGRES_PASS};Host=cba-postgres;Database=${POSTGRES_HOST};
+    ports:
+      - 8899:80
+    volumes:
+      - ./file-cache:/app/file-cache
