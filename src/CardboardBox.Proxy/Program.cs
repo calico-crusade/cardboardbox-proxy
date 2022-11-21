@@ -21,6 +21,14 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseCors(c =>
+{
+	c.AllowAnyHeader()
+	 .AllowAnyMethod()
+	 .AllowAnyOrigin()
+	 .WithExposedHeaders("Content-Disposition");
+});
+
 app.UseAuthorization();
 
 app.MapControllers();
