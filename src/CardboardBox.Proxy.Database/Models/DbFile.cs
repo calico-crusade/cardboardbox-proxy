@@ -20,6 +20,15 @@
 		[JsonPropertyName("groupName")]
 		public string GroupName { get; set; } = string.Empty;
 
+		[JsonPropertyName("referer")]
+		public string? Referer { get; set; }
+
+		[JsonPropertyName("fileHash")]
+		public string? FileHash { get; set; }
+
+		[JsonPropertyName("imageHash")]
+		public string? ImageHash { get; set; }
+
 		[JsonPropertyName("expires")]
 		public DateTime? Expires { get; set; }
 

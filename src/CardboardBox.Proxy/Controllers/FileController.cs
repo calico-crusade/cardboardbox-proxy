@@ -3,28 +3,33 @@ using Microsoft.AspNetCore.Mvc;
 namespace CardboardBox.Proxy.Controllers
 {
 	using Database;
+	using ImageSim;
 
 	[ApiController]
 	public class FileController : ControllerBase
 	{
 		private readonly IProxyService _proxy;
 		private readonly IProxyDbService _db;
+		private readonly IImageSimService _img;
 
 		public FileController(
 			IProxyService proxy, 
-			IProxyDbService db)
+			IProxyDbService db,
+			IImageSimService img)
 		{
 			_proxy = proxy;
 			_db = db;
+			_img = img;
 		}
 
 		[HttpGet, Route("proxy")]
 		public async Task<IActionResult> Get(
 			[FromQuery] string path, 
 			[FromQuery] string group = ProxyService.DEFAULT_GROUP, 
-			[FromQuery] DateTime? expires = null)
+			[FromQuery] DateTime? expires = null,
+			[FromQuery] string? referer = null)
 		{
-			var data = await _proxy.GetFile(path, group, expires);
+			var data = await _proxy.GetFile(path, group, expires, false, referer);
 			if (data == null) return NotFound();
 
 			return File(data.Stream, data.MimeType, data.Name);

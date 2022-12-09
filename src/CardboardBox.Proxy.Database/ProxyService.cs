@@ -1,8 +1,10 @@
-﻿namespace CardboardBox.Proxy.Database
+﻿using System.Security.Cryptography;
+
+namespace CardboardBox.Proxy.Database
 {
 	public interface IProxyService
 	{
-		Task<FileData?> GetFile(string url, string group = ProxyService.DEFAULT_GROUP, DateTime? expires = null);
+		Task<FileData?> GetFile(string url, string group = ProxyService.DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null);
 	}
 
 	public class ProxyService : IProxyService
@@ -28,7 +30,7 @@
 			_api = api;
 		}
 
-		public async Task<FileData?> GetFile(string url, string group = DEFAULT_GROUP, DateTime? expires = null)
+		public async Task<FileData?> GetFile(string url, string group = DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null)
 		{
 			try
 			{
@@ -39,19 +41,33 @@
 				var path = GeneratePath(hash, group);
 				var data = await _db.GetFileByHash(hash);
 
-				var expired = (data?.Expires ?? DateTime.MaxValue) <= DateTime.Now;
+				if (data?.FileHash == null) force = true;
 
-				if (data != null && !expired && File.Exists(path))
+				var expired = (data?.Expires ?? DateTime.MaxValue) <= DateTime.UtcNow;
+
+				if (data != null && !expired && File.Exists(path) && !force)
 					return new(ReadFile(path), data.Name, data.MimeType, data.Id);
 
 				var io = new MemoryStream();
-				var (stream, _, file, type) = await _api.GetData(url);
+				var (stream, _, file, type) = await _api.GetData(url, c =>
+				{
+					if (string.IsNullOrEmpty(referer)) return;
+						
+					c.Headers.Add("Referer", referer);
+					c.Headers.Add("Sec-Fetch-Dest", "document");
+					c.Headers.Add("Sec-Fetch-Mode", "navigate");
+					c.Headers.Add("Sec-Fetch-Site", "cross-site");
+					c.Headers.Add("Sec-Fetch-User", "?1");
+				});
 				await stream.CopyToAsync(io);
+				io.Position = 0;
+
+				var fileHash = GetFileHash(io);
 				io.Position = 0;
 
 				file = DetermineFileName(file, url);
 
-				var id = await _db.Upsert(new DbFile { Url = url, Hash = hash, Name = file, MimeType = type, GroupName = group, Expires = expires });
+				var id = await _db.Upsert(new DbFile { Url = url, Hash = hash, Name = file, FileHash = fileHash, Referer = referer, MimeType = type, GroupName = group, Expires = expires });
 
 				using var oo = File.Create(path);
 				await io.CopyToAsync(oo);
@@ -64,6 +80,12 @@
 				_logger.LogError(ex, $"Error occurred while fetching resource: {url} :: {group} :: {expires}");
 				return null;
 			}
+		}
+
+		public string GetFileHash(Stream io)
+		{
+			using var hasher = SHA512.Create();
+			return hasher.ComputeHash(io).ToHexString();
 		}
 
 		public string DetermineFileName(string current, string url)

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardboardBox.Proxy", "CardboardBox.Proxy\CardboardBox.Proxy.csproj", "{406ABA63-EF4A-41BA-BA27-85EB2DF71EF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardboardBox.Proxy", "CardboardBox.Proxy\CardboardBox.Proxy.csproj", "{406ABA63-EF4A-41BA-BA27-85EB2DF71EF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardboardBox.Proxy.Database", "CardboardBox.Proxy.Database\CardboardBox.Proxy.Database.csproj", "{988EBECB-F5F5-4EA3-AA87-2BC0F5EBF5D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardboardBox.Proxy.Database", "CardboardBox.Proxy.Database\CardboardBox.Proxy.Database.csproj", "{988EBECB-F5F5-4EA3-AA87-2BC0F5EBF5D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardboardBox.ImageSim", "CardboardBox.ImageSim\CardboardBox.ImageSim.csproj", "{52EBD88C-4B06-4690-B437-0BCADC404131}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{988EBECB-F5F5-4EA3-AA87-2BC0F5EBF5D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{988EBECB-F5F5-4EA3-AA87-2BC0F5EBF5D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{988EBECB-F5F5-4EA3-AA87-2BC0F5EBF5D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52EBD88C-4B06-4690-B437-0BCADC404131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52EBD88C-4B06-4690-B437-0BCADC404131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52EBD88C-4B06-4690-B437-0BCADC404131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52EBD88C-4B06-4690-B437-0BCADC404131}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

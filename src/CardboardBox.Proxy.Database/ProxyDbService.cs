@@ -45,7 +45,10 @@ namespace CardboardBox.Proxy.Database
 	expires,
 	created_at,
 	updated_at,
-	deleted_at
+	deleted_at,
+	file_hash,
+	image_hash,
+	referer
 ) VALUES (
 	:Url,
 	:Name,
@@ -55,7 +58,10 @@ namespace CardboardBox.Proxy.Database
 	:Expires,
 	CURRENT_TIMESTAMP,
 	CURRENT_TIMESTAMP,
-	:DeletedAt
+	:DeletedAt,
+	:FileHash,
+	:ImageHash,
+	:Referer
 ) ON CONFLICT (hash) DO UPDATE SET
 	url = :Url,
 	name = :Name,
@@ -64,7 +70,10 @@ namespace CardboardBox.Proxy.Database
 	group_name = :GroupName,
 	expires = :Expires,
 	updated_at = CURRENT_TIMESTAMP,
-	deleted_at = :DeletedAt
+	deleted_at = :DeletedAt,
+	file_hash = :FileHash,
+	image_hash = :ImageHash,
+	referer = :Referer
 RETURNING id";
 			return _sql.ExecuteScalar<long>(QUERY, file);
 		}
@@ -102,6 +111,10 @@ SELECT COUNT(*) FROM file_cache WHERE deleted_at IS NULL;";
     mime_type text not null,
     group_name text not null,
     expires timestamp,
+
+	file_hash text,
+	image_hash text,
+	referer text,
 
     created_at timestamp not null default CURRENT_TIMESTAMP,
     updated_at timestamp not null default CURRENT_TIMESTAMP,

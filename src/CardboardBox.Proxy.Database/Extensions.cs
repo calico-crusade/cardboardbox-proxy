@@ -2,6 +2,8 @@
 
 namespace CardboardBox.Proxy.Database
 {
+	using ImageSim;
+
 	public static class Extensions
 	{
 		public static IServiceCollection AddProxy(this IServiceCollection services)
@@ -17,7 +19,8 @@ namespace CardboardBox.Proxy.Database
 				.AddCardboardHttp()
 				.AddTransient<IProxyService, ProxyService>()
 				.AddTransient<IProxyDbService, ProxyDbService>()
-				.AddTransient<ISqlService, NpgsqlService>();
+				.AddTransient<ISqlService, NpgsqlService>()
+				.AddTransient<IImageSimService, ImageSimService>();
 		}
 	}
 }

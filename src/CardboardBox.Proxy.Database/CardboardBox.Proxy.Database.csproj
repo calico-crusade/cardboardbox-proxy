@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CardboardBox.Database" Version="1.0.6" />
+    <PackageReference Include="CardboardBox.Extensions" Version="1.0.10" />
     <PackageReference Include="CardboardBox.Http.Files" Version="1.0.1" />
     <PackageReference Include="CardboardBox.Setup" Version="1.0.8" />
     <PackageReference Include="Npgsql" Version="6.0.7" />
@@ -15,6 +16,10 @@
 	
 	<ItemGroup>
 		<Compile Include="./../global.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\CardboardBox.ImageSim\CardboardBox.ImageSim.csproj" />
 	</ItemGroup>
 
 </Project>
