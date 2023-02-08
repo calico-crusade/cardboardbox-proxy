@@ -4,7 +4,7 @@ namespace CardboardBox.Proxy.Database
 {
 	public interface IProxyService
 	{
-		Task<FileData?> GetFile(string url, string group = ProxyService.DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null);
+		Task<FileData?> GetFile(string url, string group = ProxyService.DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null, bool noCache = false);
 	}
 
 	public class ProxyService : IProxyService
@@ -30,7 +30,7 @@ namespace CardboardBox.Proxy.Database
 			_api = api;
 		}
 
-		public async Task<FileData?> GetFile(string url, string group = DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null)
+		public async Task<FileData?> GetFile(string url, string group = DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null, bool noCache = false)
 		{
 			try
 			{
@@ -67,10 +67,25 @@ namespace CardboardBox.Proxy.Database
 
 				file = DetermineFileName(file, url);
 
-				var id = await _db.Upsert(new DbFile { Url = url, Hash = hash, Name = file, FileHash = fileHash, Referer = referer, MimeType = type, GroupName = group, Expires = expires });
+				long id = -1;
 
-				using var oo = File.Create(path);
-				await io.CopyToAsync(oo);
+				if (!noCache)
+				{
+					id = await _db.Upsert(new DbFile 
+					{ 
+						Url = url, 
+						Hash = hash, 
+						Name = file, 
+						FileHash = fileHash, 
+						Referer = referer, 
+						MimeType = type, 
+						GroupName = group, 
+						Expires = expires 
+					});
+
+					using var oo = File.Create(path);
+					await io.CopyToAsync(oo);
+				}
 
 				io.Position = 0;
 				return new(io, file, type, id);
