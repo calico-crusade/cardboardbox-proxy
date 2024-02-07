@@ -48,7 +48,11 @@ namespace CardboardBox.Proxy.Database
 				if (data != null && !expired && File.Exists(path) && !force)
 					return new(ReadFile(path), data.Name, data.MimeType, data.Id);
 
-				var io = new MemoryStream();
+				var ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
+				if (url.ToLower().Contains("mangadex"))
+					ua = "cba-api";
+
+                var io = new MemoryStream();
 				var (stream, _, file, type) = await _api.GetData(url, c =>
 				{
 					if (string.IsNullOrEmpty(referer)) return;
@@ -58,7 +62,7 @@ namespace CardboardBox.Proxy.Database
 					c.Headers.Add("Sec-Fetch-Mode", "navigate");
 					c.Headers.Add("Sec-Fetch-Site", "cross-site");
 					c.Headers.Add("Sec-Fetch-User", "?1");
-				});
+				}, ua);
 				await stream.CopyToAsync(io);
 				io.Position = 0;
 
