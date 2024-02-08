@@ -31,8 +31,12 @@ namespace CardboardBox.Proxy.Database
 		}
 
 		public async Task<FileData?> GetFile(string url, string group = DEFAULT_GROUP, DateTime? expires = null, bool force = false, string? referer = null, bool noCache = false)
-		{
-			try
+        {
+            var ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0";
+            if (url.ToLower().Contains("mangadex"))
+                ua = "cba-api";
+
+            try
 			{
 				if (!Directory.Exists(CacheDirectory))
 					Directory.CreateDirectory(CacheDirectory);
@@ -48,9 +52,6 @@ namespace CardboardBox.Proxy.Database
 				if (data != null && !expired && File.Exists(path) && !force)
 					return new(ReadFile(path), data.Name, data.MimeType, data.Id);
 
-				var ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
-				if (url.ToLower().Contains("mangadex"))
-					ua = "cba-api";
 
                 var io = new MemoryStream();
 				var (stream, _, file, type) = await _api.GetData(url, c =>
@@ -96,7 +97,7 @@ namespace CardboardBox.Proxy.Database
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occurred while fetching resource: {url} :: {group} :: {expires}");
+				_logger.LogError(ex, $"Error occurred while fetching resource: {url} :: {group} :: {expires} :: {ua}");
 				return null;
 			}
 		}
