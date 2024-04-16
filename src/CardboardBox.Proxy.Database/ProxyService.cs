@@ -57,6 +57,18 @@ namespace CardboardBox.Proxy.Database
 				var (stream, _, file, type) = await _api.GetData(url, c =>
 				{
 					if (string.IsNullOrEmpty(referer)) return;
+
+					if (referer.ToLower().Contains("chapmanganato"))
+                    {
+                        c.Headers.Add("Referer", referer);
+                        c.Headers.Add("Sec-Fetch-Dest", "image");
+                        c.Headers.Add("Sec-Fetch-Mode", "no-cors");
+                        c.Headers.Add("Sec-Fetch-Site", "cross-site");
+                        c.Headers.Add("Sec-Ch-Ua-Platform", "\"Windows\"");
+						c.Headers.Add("Sec-Ch-Ua-Mobile", "?0");
+						c.Headers.Add("Sec-Ch-Ua", "\"Not A(Brand\";v=\"99\", \"Opera GX\";v=\"107\", \"Chromium\";v=\"121\"");
+						return;
+                    }
 						
 					c.Headers.Add("Referer", referer);
 					c.Headers.Add("Sec-Fetch-Dest", "document");
