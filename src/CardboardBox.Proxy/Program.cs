@@ -29,6 +29,8 @@ app.UseCors(c =>
 	 .WithExposedHeaders("Content-Disposition");
 });
 
+app.UseResponseCaching();
+
 app.UseAuthorization();
 
 app.MapControllers();
