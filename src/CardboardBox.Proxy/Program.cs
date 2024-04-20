@@ -29,7 +29,7 @@ app.UseCors(c =>
 	 .WithExposedHeaders("Content-Disposition");
 });
 
-app.UseResponseCaching();
+//app.UseResponseCaching();
 
 app.UseAuthorization();
 
