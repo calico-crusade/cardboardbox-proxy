@@ -23,7 +23,7 @@ namespace CardboardBox.Proxy.Controllers
 		}
 
 		[HttpGet, Route("proxy")]
-		[ResponseCache(Duration = 31536000)]
+		[ResponseCache(Duration = 31536000, VaryByQueryKeys = new[] { "*" }, Location = ResponseCacheLocation.Any)]
 		public async Task<IActionResult> Get(
 			[FromQuery] string path, 
 			[FromQuery] string group = ProxyService.DEFAULT_GROUP, 
